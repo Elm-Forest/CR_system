@@ -1,6 +1,6 @@
 # A Web Application for Multimodal Cloud Removal via Ensemble Learning
 
-> This is my undergraduate graduation project. The following is an incomplete document for reference only.
+> This is my **Undergraduate Graduation Project**. The following is an incomplete document for reference only.
 
 <div>
   <img src="https://github.com/Elm-Forest/CR_system/raw/refs/heads/master/.github/imgs/s2_img2.png?raw=true" width="20%" alt="" style="display: inline-block">
@@ -9,9 +9,13 @@
 </div>
 Left to right: Cloud-covered Optical Image, SAR Image, Cloud-removed Optical Image.
 
+## Model Structure
+**Stacking Ensemble Learning Framework**<br>
+<img src="https://github.com/Elm-Forest/CR_system/raw/refs/heads/master/.github/imgs/stacking.png?raw=true" width="60%" alt="" style="display: inline-block">
+
 ## Installation
 
-Python 3.7. is required
+Python 3.7. is strictly required. See requirement.txt for the rest of the dependencies.
 
 ```shell
 git clone ..
@@ -19,13 +23,14 @@ cd CR_system
 pip install -r requirements.txt
 ```
 
-Make sure you have a c++ project build environment ready
+Make sure you have a c++ build environment ready, and [ninja](https://github.com/ninja-build/ninja) is recommended.
 
 ```shell
 # install kernelconv2d, ref: https://github.com/xufangchn/GLF-CR#prerequisites--installation
 cd ./glf_cr/FAC/kernelconv2d/
 python setup.py clean
 python setup.py install --user
+
 ```
 
 ## Prepare Data
@@ -34,12 +39,13 @@ SEN12MS-CR DATASET Ref: https://patricktum.github.io/cloud_removal/sen12mscr/
 
 ## Prepare Weights
 
+
 | Model                                       | Download                                                                                     | Repo                                     |
-|---------------------------------------------|----------------------------------------------------------------------------------------------|------------------------------------------|
+| ------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | DSen2-CR<sup>[[1]](#refer-anchor-1)</sup>   | [weight](https://drive.google.com/file/d/1L3YUVOnlg67H5VwlgYO9uC9iuNlq7VMg/view)             | https://github.com/xufangchn/GLF-CR      |
 | GLF-CR<sup>[[2]](#refer-anchor-2)</sup>     | [weight](https://drive.google.com/file/d/11EYrrqLzlqrDgrJNgIW7IY0nSz_S5y9Z/view?usp=sharing) | https://github.com/ameraner/dsen2-cr     |
 | UnCRtainTS<sup>[[3]](#refer-anchor-3)</sup> | [weight](https://u.pcloud.link/publink/show?code=kZsdbk0Z5Y2Y2UEm48XLwOvwSVlL8R2L3daV)       | https://github.com/PatrickTUM/UnCRtainTS |
-| TUA-CR(Ensemble Head)                       | [weight](https://u.pcloud.link/publink/show?code=kZsdbk0Z5Y2Y2UEm48XLwOvwSVlL8R2L3daV)       | /                                        |
+| TUA-CR (Ensemble Head)                      | [weight](https://github.com/Elm-Forest/CR_system/releases/latest)                            |                                          |
 
 ```shell
 cd weights
@@ -67,7 +73,11 @@ cd CR_system
 python test.py
 ```
 
-## Reference
+**Training**
+> Not Available.\
+> The training process is not end-to-end, and training methods are not provided here.
+
+## References
 
 <span id="refer-anchor-1">
 [1] Meraner, Andrea et al. “Cloud removal in Sentinel-2 imagery using a deep residual neural network and SAR-optical data fusion.” Isprs Journal of Photogrammetry and Remote Sensing 166 (2020): 333 - 346.<br>
