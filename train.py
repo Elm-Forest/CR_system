@@ -86,7 +86,6 @@ elif opts.use_sar and opts.use_input2:
 else:
     raise NotImplemented
 
-# meta_learner.apply(weights_init)
 if opts.load_weights and opts.weights_path is not None:
     weights = torch.load(opts.weights_path)
     try:
@@ -101,7 +100,6 @@ if len(opts.gpu_ids) > 1:
 
 optimizer = optim.Adam(meta_learner.parameters(), lr=opts.lr, weight_decay=opts.weight_decay)
 criterion_L1 = L1_Charbonnier_loss().to(device)
-# criterion_Color = ColorLoss().to(device)
 criterion_L2 = nn.MSELoss().to(device)
 criterion_TV = TVLoss(weight=1.0).to(device)
 criterion_vgg = lpips.LPIPS(net='alex').to(device)
@@ -149,7 +147,6 @@ for epoch in range(num_epochs):
         elif opts.use_sar is not None and opts.use_input2 is not None:
             sars = images["sar"].to(device)
             inputs2 = images["input2"].to(device)
-            # concatenated = torch.cat((inputs, inputs2), dim=1)
             outputs = meta_learner(inputs, inputs2, sars, cloudy)
         else:
             outputs = meta_learner(inputs)
@@ -166,10 +163,7 @@ for epoch in range(num_epochs):
         loss_attn = criterion_L2(out_attn[:, 0, :, :], mask)
         loss_TV = criterion_TV(outputs)
         loss_vgg = criterion_vgg(outputs, targets_rgb)
-        # loss_color = criterion_Color(outputs, targets_rgb)
-        # loss = loss_l1 * 100 + loss_color * 0.01
         loss = loss_RGB * 100 + loss_S2 * 5 + loss_TV * 5 + loss_sar * 5 + loss_ROI * 100 + loss_vgg * 5 + loss_attn * 5
-        # print(loss_l1.item() * 100, loss_color.item() * 0.01)
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
@@ -264,7 +258,6 @@ for epoch in range(num_epochs):
             elif opts.use_sar is not None and opts.use_input2 is not None:
                 sars = images["sar"].to(device)
                 inputs2 = images["input2"].to(device)
-                # concatenated = torch.cat((inputs, inputs2), dim=1)
                 outputs = meta_learner(inputs, inputs2, sars, cloudy)
             else:
                 outputs = meta_learner(inputs)

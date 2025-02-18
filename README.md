@@ -1,4 +1,4 @@
-# A Web-Based System for Cloud Removal in Single-Temporal Multispectral Images Using Ensemble Learning
+# A Web Application for Multimodal Cloud Removal via Ensemble Learning
 
 > This is my undergraduate graduation project. The following is an incomplete document for reference only.
 
@@ -34,13 +34,12 @@ SEN12MS-CR DATASET Ref: https://patricktum.github.io/cloud_removal/sen12mscr/
 
 ## Prepare Weights
 
-
-
-| Model    | Download | Repo |
-|----------|-----|-----|
-| DSen2-CR <sup>[[1]](#refer-anchor-1)</sup> | [weight](https://drive.google.com/file/d/1L3YUVOnlg67H5VwlgYO9uC9iuNlq7VMg/view) |  https://github.com/xufangchn/GLF-CR   |
-| GLF-CR <sup>[[2]](#refer-anchor-2)</sup>  | [weight](https://drive.google.com/file/d/11EYrrqLzlqrDgrJNgIW7IY0nSz_S5y9Z/view?usp=sharing) |  https://github.com/ameraner/dsen2-cr   |
-| UnCRtainTS <sup>[[3]](#refer-anchor-3)</sup> | [weight](https://u.pcloud.link/publink/show?code=kZsdbk0Z5Y2Y2UEm48XLwOvwSVlL8R2L3daV) |   https://github.com/PatrickTUM/UnCRtainTS  |
+| Model                                       | Download                                                                                     | Repo                                     |
+|---------------------------------------------|----------------------------------------------------------------------------------------------|------------------------------------------|
+| DSen2-CR<sup>[[1]](#refer-anchor-1)</sup>   | [weight](https://drive.google.com/file/d/1L3YUVOnlg67H5VwlgYO9uC9iuNlq7VMg/view)             | https://github.com/xufangchn/GLF-CR      |
+| GLF-CR<sup>[[2]](#refer-anchor-2)</sup>     | [weight](https://drive.google.com/file/d/11EYrrqLzlqrDgrJNgIW7IY0nSz_S5y9Z/view?usp=sharing) | https://github.com/ameraner/dsen2-cr     |
+| UnCRtainTS<sup>[[3]](#refer-anchor-3)</sup> | [weight](https://u.pcloud.link/publink/show?code=kZsdbk0Z5Y2Y2UEm48XLwOvwSVlL8R2L3daV)       | https://github.com/PatrickTUM/UnCRtainTS |
+| TUA-CR(Ensemble Head)                       | [weight](https://u.pcloud.link/publink/show?code=kZsdbk0Z5Y2Y2UEm48XLwOvwSVlL8R2L3daV)       | /                                        |
 
 ```shell
 cd weights
@@ -67,7 +66,9 @@ python main_web_service.py
 cd CR_system
 python test.py
 ```
+
 ## Reference
+
 <span id="refer-anchor-1">
 [1] Meraner, Andrea et al. “Cloud removal in Sentinel-2 imagery using a deep residual neural network and SAR-optical data fusion.” Isprs Journal of Photogrammetry and Remote Sensing 166 (2020): 333 - 346.<br>
 </span>
