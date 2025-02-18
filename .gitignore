@@ -1,0 +1,10 @@
+.idea
+./web_service/app/inference/
+*.pth
+*.hdf5
+*.pth.tar
+/models/UnCRtainTS/inference/
+/inference/
+/models/glf_cr/FAC/kernelconv2d/build/
+/models/glf_cr/FAC/kernelconv2d/kernelconv2d_cuda.egg-info/
+/models/glf_cr/FAC/kernelconv2d/dist/

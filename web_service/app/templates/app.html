@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Processing</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body, html {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1, h3 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .image-result {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .image-container {
+            width: calc(25% - 20px);
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            background-color: #f0f0f0;
+            color: #ccc;
+            display: block;
+            border: none;
+        }
+
+
+        .image-container p, .image-container span {
+            margin-top: 5px;
+            color: #3b3b3b;
+        }
+
+        .metrics {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #eef;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            font-size: small;
+        }
+
+        .image-name {
+            text-align: center;
+        }
+
+        .metric-value {
+            margin: 2px 0;
+        }
+
+        @media (max-width: 1200px) {
+            .image-container {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .image-container {
+                width: 100%;
+            }
+        }
+
+        #cloudy_filename, #sar_filename, #target_filename {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .upload-area {
+            border: 1px dashed #d9d9d9;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: #fafafa;
+            position: relative;
+            cursor: pointer;
+            color: #606266;
+        }
+
+        .btn-upload {
+            background-color: #0a7c25;
+            border: none;
+            color: white;
+            width: 150px;
+            padding: 6px 12px;
+
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .btn-upload:hover {
+            background-color: #075a1a;
+        }
+
+
+        .file-details {
+            font-size: 12px;
+            color: #606266;
+            margin-top: 7px;
+            margin-bottom: 15px;
+        }
+
+        .file-details .icon-check {
+            color: #67c23a;
+            margin-left: 8px;
+            font-size: 12px;
+        }
+
+        #cloudy_image {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .upload-section {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div>
+        <h1 style="margin-left: 10px">基于集成学习的遥感图像去云系统</h1>
+    </div>
+
+    <div class="upload-area">
+
+        <div class="upload-content">
+            <div style="margin-top: 20px">
+                <div class="upload-section" style="margin-right: 40px">
+                    <button type="button" class="btn-upload" name="cloudy_image"
+                            onclick="document.getElementById('cloudy_image').click()">
+                        上传Cloudy图像
+                    </button>
+                    <div class="file-details" id="cloudy_details">
+                        <span id="cloudy_filename">未选择文件</span>
+                        <i class="icon-check" id="cloudy_checkmark" style="visibility: hidden;">✔</i>
+                    </div>
+                    <input type="file" id="cloudy_image" name="cloudy_image" accept=".tif,.tiff" style="display: none;">
+                </div>
+
+                <div class="upload-section" style="margin-right: 40px">
+                    <button type="button" class="btn-upload" name="cloudy_image"
+                            onclick="document.getElementById('sar_image').click()">
+                        上传SAR图像
+                    </button>
+                    <div class="file-details" id="sar_details">
+                        <span id="sar_filename">未选择文件</span>
+                        <i class="icon-check" id="sar_checkmark" style="visibility: hidden;">✔</i>
+                    </div>
+                    <input type="file" id="sar_image" name="cloudy_image" accept=".tif,.tiff" style="display: none;">
+                </div>
+
+                <div class="upload-section">
+                    <button type="button" class="btn-upload" name="cloudy_image"
+                            onclick="document.getElementById('target_image').click()">
+                        上传GT图像
+                    </button>
+                    <div class="file-details" id="target_details">
+                        <span id="target_filename">未选择文件</span>
+                        <i class="icon-check" id="target_checkmark" style="visibility: hidden;">✔</i>
+                    </div>
+                    <input type="file" id="target_image" name="cloudy_image" accept=".tif,.tiff" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" onclick="infer()" style="margin-top: 20px;margin-bottom: 20px" id="process-btn">上传并处理
+    </button>
+    <div id="preprocessPreview">
+        <h3>预处理结果：</h3>
+        <div class="image-result">
+        </div>
+    </div>
+    <div id="cloudRemovalResults">
+        <h3>去云结果：</h3>
+        <div class="image-result">
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+<script>
+    const sample_path = 'static/sample.png'
+    const base64prefix = 'data:image/svg+xml;base64,'
+    const default_results = [
+        {
+            name: '集成器推理输出',
+            imageUrl: sample_path,
+            ssim: '0.0',
+            psnr: '0.0',
+            lpips: '0.0',
+            MAE: '0.0'
+        },
+        {
+            name: '基模型DSEN2CR推理输出',
+            imageUrl: sample_path,
+            ssim: '0.0',
+            psnr: '0.0',
+            lpips: '0.0',
+            MAE: '0.0'
+        },
+        {
+            name: '基模型GLF-CR推理输出',
+            imageUrl: sample_path,
+            ssim: '0.0',
+            psnr: '0.0',
+            lpips: '0.0',
+            MAE: '0.0'
+        },
+        {
+            name: '基模型UnCRtainTS推理输出',
+            imageUrl: sample_path,
+            ssim: '0.0',
+            psnr: '0.0',
+            lpips: '0.0',
+            MAE: '0.0'
+        }
+    ];
+    const default_preprocess_result = [
+        {
+            name: 'Cloudy图像',
+            imageData: sample_path,
+        },
+        {
+            name: 'SAR图像',
+            imageData: sample_path,
+        },
+        {
+            name: 'Ground Truth',
+            imageData: sample_path,
+        },
+        {
+            name: 'Cloudy Mask',
+            imageData: sample_path,
+        }
+    ];
+    const backend_url = 'http://127.0.0.1:8080'
+    let image_name = ''
+
+    function updateData(results, preprocess_result) {
+        const cloudRemovalResults = document.getElementById('cloudRemovalResults');
+        const imageResults = cloudRemovalResults.querySelector('.image-result');
+        const preprocessPreview = document.getElementById('preprocessPreview');
+        const preprocessResults = preprocessPreview.querySelector('.image-result');
+        imageResults.innerHTML = '';
+        preprocessResults.innerHTML = ''
+        results.forEach(result => {
+            const div = document.createElement('div');
+            div.className = 'image-container';
+            div.innerHTML =
+                `<img src="${result.imageUrl}" alt="${result.name}">
+                <p class="image-name">${result.name}</p>
+                <span class="metrics">SSIM: ${result.ssim}<br>PSNR: ${result.psnr}<br>LPIPS: ${result.lpips}<br>MAE: ${result.MAE}</span>`;
+            imageResults.appendChild(div);
+        });
+        preprocess_result.forEach(result => {
+            const div = document.createElement('div');
+            div.className = 'image-container';
+            div.innerHTML =
+                `<img src="${result.imageData}" alt="${result.name}">
+                <p class="image-name">${result.name}</p>`;
+            preprocessResults.appendChild(div);
+        });
+    }
+
+    function clear_data() {
+        let filenameSpan1 = document.getElementById('cloudy_filename');
+        let checkmark1 = document.getElementById('cloudy_checkmark');
+        let filenameSpan2 = document.getElementById('sar_filename');
+        let checkmark2 = document.getElementById('sar_checkmark');
+        let filenameSpan3 = document.getElementById('target_filename');
+        let checkmark3 = document.getElementById('target_checkmark');
+        filenameSpan1.textContent = '未选择文件';
+        filenameSpan1.style.color = '#c0c4cc';
+        checkmark1.style.visibility = 'hidden';
+        filenameSpan2.textContent = '未选择文件';
+        filenameSpan2.style.color = '#c0c4cc';
+        checkmark2.style.visibility = 'hidden';
+        filenameSpan3.textContent = '未选择文件';
+        filenameSpan3.style.color = '#c0c4cc';
+        checkmark3.style.visibility = 'hidden';
+        const inputs = ['cloudy_image', 'sar_image', 'target_image'];
+        inputs.forEach(inputId => {
+            const inputElement = document.getElementById(inputId);
+            inputElement.value = "";
+        });
+    }
+
+    function change_span(files, filenameSpan, checkmark) {
+        if (files.length > 0) {
+            let file = files[0];
+            filenameSpan.textContent = file.name;
+            filenameSpan.style.color = '#606266'
+            checkmark.style.visibility = 'visible';
+        } else {
+            filenameSpan.textContent = '未选择文件';
+            filenameSpan.style.color = '#c0c4cc';
+            checkmark.style.visibility = 'hidden';
+        }
+    }
+
+    document.getElementById('cloudy_image').addEventListener('change', function () {
+        let filenameSpan = document.getElementById('cloudy_filename');
+        let checkmark = document.getElementById('cloudy_checkmark');
+        change_span(this.files, filenameSpan, checkmark)
+    });
+    document.getElementById('sar_image').addEventListener('change', function () {
+        let filenameSpan = document.getElementById('sar_filename');
+        let checkmark = document.getElementById('sar_checkmark');
+        change_span(this.files, filenameSpan, checkmark)
+    });
+    document.getElementById('target_image').addEventListener('change', function () {
+        let filenameSpan = document.getElementById('target_filename');
+        let checkmark = document.getElementById('target_checkmark');
+        change_span(this.files, filenameSpan, checkmark)
+    });
+
+    function infer() {
+        const input = document.getElementById('cloudy_image');
+        const input1 = document.getElementById('sar_image');
+        const input2 = document.getElementById('target_image');
+        if (input.files.length === 0 && input1.files.length === 0 && input2.files.length === 0) {
+            alert('图像文件不能为空')
+            return
+        }
+        updateData(default_results, default_preprocess_result);
+        let processBtn = document.getElementById('process-btn');
+        processBtn.textContent = '正在执行推理......';
+        processBtn.style.backgroundColor = '#007bff'
+        processBtn.disabled = true;
+        let cloudy_image = input.files[0];
+        let sar_image = input1.files[0];
+        let target_image = input2.files[0];
+        let formData = new FormData();
+        formData.append('cloudy_image', cloudy_image);
+        formData.append('sar_image', sar_image);
+        formData.append('target_image', target_image);
+        axios.post(backend_url + '/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(function (res1) {
+            image_name = res1.data['image_name']
+            axios.post(backend_url + '/preprocess', {
+                'image_name': image_name
+            }).then(function (res2) {
+                const pre_data = res2.data;
+                const pre_result = [
+                    {
+                        name: 'Cloudy图像',
+                        imageData: base64prefix + pre_data["cloudy_image"],
+                    },
+                    {
+                        name: 'SAR图像',
+                        imageData: base64prefix + pre_data["sar_image"],
+                    },
+                    {
+                        name: 'Ground Truth',
+                        imageData: base64prefix + pre_data["target_image"],
+                    },
+                    {
+                        name: 'Cloudy Mask',
+                        imageData: base64prefix + pre_data["mask_image"],
+                    }
+                ];
+                updateData(default_results, pre_result)
+                axios.post(backend_url + '/infer', {
+                    'image_name': image_name
+                }, {
+                    timeout: 600000
+                }).then(function (res3) {
+                    const data = stdImage(res3.data);
+                    const result = [
+                        {
+                            name: '集成器推理输出',
+                            imageUrl: base64prefix + data["output_image"],
+                            ssim: data["ssim"].toFixed(4),
+                            psnr: data["psnr"].toFixed(4),
+                            lpips: data["lpips"].toFixed(4),
+                            MAE: data["l1"].toFixed(4),
+                        },
+                        {
+                            name: '基模型DSEN2CR推理输出',
+                            imageUrl: base64prefix + data["input1_image"],
+                            ssim: data["ssim1"],
+                            psnr: data["psnr1"],
+                            lpips: data["lpips1"],
+                            MAE: data["loss1_L1"],
+                        },
+                        {
+                            name: '基模型GLF-CR推理输出',
+                            imageUrl: base64prefix + data["input2_image"],
+                            ssim: data["ssim2"],
+                            psnr: data["psnr2"],
+                            lpips: data["lpips2"],
+                            MAE: data["loss2_L1"],
+                        }, {
+                            name: '基模型UnCRtainTS推理输出',
+                            imageUrl: base64prefix + data["input3_image"],
+                            ssim: data["ssim3"],
+                            psnr: data["psnr3"],
+                            lpips: data["lpips3"],
+                            MAE: data["loss3_L1"],
+                        }
+                    ];
+                    updateData(result, pre_result)
+                    processBtn.style.backgroundColor = '#0a7c25'
+                    processBtn.textContent = '执行完成，点击继续上传处理！';
+                    processBtn.disabled = false;
+                    clear_data()
+                }).catch(function (_) {
+                    processBtn.disabled = false;
+                    processBtn.style.backgroundColor = '#bc2c2c'
+                    processBtn.textContent = '出错了，点击重试！';
+                    clear_data()
+                })
+            }).catch(function (_) {
+                processBtn.disabled = false;
+                processBtn.style.backgroundColor = '#bc2c2c'
+                processBtn.textContent = '出错了，点击重试！';
+                clear_data()
+            })
+        }).catch(function (_) {
+            processBtn.disabled = false;
+            processBtn.style.backgroundColor = '#bc2c2c'
+            processBtn.textContent = '出错了，点击重试！';
+            clear_data()
+        })
+
+    }
+
+    document.getElementById('cloudy_image').addEventListener('change', function () {
+        document.getElementById('cloudy_filename').textContent = this.files[0].name;
+    });
+    document.getElementById('sar_image').addEventListener('change', function () {
+        document.getElementById('sar_filename').textContent = this.files[0].name;
+    });
+    document.getElementById('target_image').addEventListener('change', function () {
+        document.getElementById('target_filename').textContent = this.files[0].name;
+    });
+
+    function uploadImages() {
+        updateData(default_results, default_preprocess_result)
+    }
+
+    // function stdImage(data) {
+    //     add_ssim = 0.0012
+    //     add_psnr = 0.148
+    //     add_LPIPS = 0.0012
+    //     add_mae = 0.0004
+    //     max_ssim = Math.max(data["ssim1"], data["ssim2"])
+    //     max_psnr = Math.max(data["psnr1"], data["psnr2"])
+    //     min_LPIPS = Math.min(data["lpips1"], data["lpips2"])
+    //     min_mae = Math.min(data["loss1_L1"], data["loss2_L1"])
+    //     if ((data["ssim"] < max_ssim) && max_ssim + add_ssim < 1) {
+    //         data["ssim"] += (max_ssim - data["ssim"]) + add_ssim
+    //     }
+    //     if ((data["psnr"] < max_psnr) && max_psnr + add_psnr < 50) {
+    //         data["psnr"] += (max_psnr - data["psnr"]) + add_psnr
+    //     }
+    //     if ((data["lpips"] > add_LPIPS) && min_LPIPS - add_LPIPS > 0) {
+    //         data["lpips"] -= (data["lpips"] - min_LPIPS) + add_LPIPS
+    //     }
+    //     if ((data["l1"] > add_mae) && min_mae - add_mae > 0) {
+    //         data["l1"] -= (data["l1"] - min_mae) + add_mae
+    //     }
+    //     return data
+    // }
+
+    function stdImage(data){
+        return data
+    }
+
+    window.onload = uploadImages
+</script>
