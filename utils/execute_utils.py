@@ -2,7 +2,7 @@ import numpy as np
 import rasterio
 import torch
 
-from models.meta.model import AttnCGAN_CR, AttnCGAN_CR0
+from models.meta.model import TUA_CR
 from utils.common import PREPROCESS, POSTPROCESS, ALLPROCESS
 from utils.feature_detectors import get_cloud_cloudshadow_mask
 
@@ -148,7 +148,7 @@ def get_attention_mask(cloudy_path):
 
 
 def load_model(path, ensemble_num=3, device=torch.device('cuda:0')):
-    model = AttnCGAN_CR0(2, 13, 3, ensemble_num=ensemble_num, bilinear=True).to(device)
+    model = TUA_CR(2, 13, 3, ensemble_num=ensemble_num, bilinear=True).to(device)
     checkpoint = torch.load(path, map_location=torch.device('cpu'))
     try:
         model.load_state_dict(checkpoint, strict=True)

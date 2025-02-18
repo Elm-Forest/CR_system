@@ -15,7 +15,7 @@ from torchvision import transforms
 from dataset.dataloader import get_filelists, SEN12MSCR_Dataset
 from loss.Charbonnier_Loss import L1_Charbonnier_loss
 from loss.tv_loss import TVLoss
-from models.meta.model import AttnCGAN_CR
+from models.meta.model import TUA_CR
 from utils.tools import ssim
 
 warnings.filterwarnings('ignore')
@@ -79,10 +79,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 if opts.use_sar and opts.use_input2 is False:
     print('create unet_new inc=13')
-    meta_learner = AttnCGAN_CR(2, 13, 3, 1).to(device)
+    meta_learner = TUA_CR(2, 13, 3, 1).to(device)
 elif opts.use_sar and opts.use_input2:
     print('create unet_new inc=26')
-    meta_learner = AttnCGAN_CR(2, 13, 3, 3, bilinear=True).to(device)
+    meta_learner = TUA_CR(2, 13, 3, 3, bilinear=True).to(device)
 else:
     raise NotImplemented
 
@@ -98,9 +98,9 @@ if len(opts.gpu_ids) > 1:
     os.environ["CUDA_VISIBLE_DEVICES"] = opts.gpu_ids
     meta_learner = nn.DataParallel(meta_learner)
 
-optimizer = optim.Adam(meta_learner.parameters(), lr=opts.lr, weight_decay=opts.weight_decay)
+optimizer = optim.AdamW(meta_learner.parameters(), lr=opts.lr, weight_decay=opts.weight_decay)
 criterion_L1 = L1_Charbonnier_loss().to(device)
-criterion_L2 = nn.MSELoss().to(device)
+loss_attn_map_L2 = nn.MSELoss().to(device)
 criterion_TV = TVLoss(weight=1.0).to(device)
 criterion_vgg = lpips.LPIPS(net='alex').to(device)
 num_epochs = opts.epoch
@@ -160,7 +160,7 @@ for epoch in range(num_epochs):
         loss_S2 = criterion_L1(out_s2, targets)
         loss_sar = criterion_L1(out_sar, targets)
         loss_ROI = criterion_L1(outputs * attn_weights, targets_rgb * attn_weights)
-        loss_attn = criterion_L2(out_attn[:, 0, :, :], mask)
+        loss_attn = loss_attn_map_L2(out_attn[:, 0, :, :], mask)
         loss_TV = criterion_TV(outputs)
         loss_vgg = criterion_vgg(outputs, targets_rgb)
         loss = loss_RGB * 100 + loss_S2 * 5 + loss_TV * 5 + loss_sar * 5 + loss_ROI * 100 + loss_vgg * 5 + loss_attn * 5

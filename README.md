@@ -10,6 +10,7 @@
 Left to right: Cloud-covered Optical Image, SAR Image, Cloud-removed Optical Image.
 
 ## Model Structure
+
 **Stacking Ensemble Learning Framework**<br>
 <img src="https://github.com/Elm-Forest/CR_system/raw/refs/heads/master/.github/imgs/stacking.png?raw=true" width="60%" alt="" style="display: inline-block">
 
@@ -39,9 +40,8 @@ SEN12MS-CR DATASET Ref: https://patricktum.github.io/cloud_removal/sen12mscr/
 
 ## Prepare Weights
 
-
 | Model                                       | Download                                                                                     | Repo                                     |
-| ------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------- |
+|---------------------------------------------|----------------------------------------------------------------------------------------------|------------------------------------------|
 | DSen2-CR<sup>[[1]](#refer-anchor-1)</sup>   | [weight](https://drive.google.com/file/d/1L3YUVOnlg67H5VwlgYO9uC9iuNlq7VMg/view)             | https://github.com/xufangchn/GLF-CR      |
 | GLF-CR<sup>[[2]](#refer-anchor-2)</sup>     | [weight](https://drive.google.com/file/d/11EYrrqLzlqrDgrJNgIW7IY0nSz_S5y9Z/view?usp=sharing) | https://github.com/ameraner/dsen2-cr     |
 | UnCRtainTS<sup>[[3]](#refer-anchor-3)</sup> | [weight](https://u.pcloud.link/publink/show?code=kZsdbk0Z5Y2Y2UEm48XLwOvwSVlL8R2L3daV)       | https://github.com/PatrickTUM/UnCRtainTS |
@@ -74,7 +74,7 @@ python test.py
 ```
 
 **Training**
-> Not Available.\
+> Not Available.<br>
 > The training process is not end-to-end, and training methods are not provided here.
 
 ## References
