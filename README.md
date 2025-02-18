@@ -1,6 +1,6 @@
-# A Web-Based System for Cloud Removal
+# A Web-Based System for Cloud Removal in Single-Temporal Multispectral Images Using Ensemble Learning
 
-> This is my undergraduate graduation project.
+> This is my undergraduate graduation project. The following is an incomplete document for reference only.
 
 <div>
   <img src="https://github.com/Elm-Forest/CR_system/raw/refs/heads/master/.github/imgs/s2_img2.png?raw=true" width="20%" alt="" style="display: inline-block">
@@ -42,6 +42,10 @@ SEN12MS-CR DATASET Ref: https://patricktum.github.io/cloud_removal/sen12mscr/
 | GLF-CR <sup>[[2]](#refer-anchor-2)</sup>  | [weight](https://drive.google.com/file/d/11EYrrqLzlqrDgrJNgIW7IY0nSz_S5y9Z/view?usp=sharing) |  https://github.com/ameraner/dsen2-cr   |
 | UnCRtainTS <sup>[[3]](#refer-anchor-3)</sup> | [weight](https://u.pcloud.link/publink/show?code=kZsdbk0Z5Y2Y2UEm48XLwOvwSVlL8R2L3daV) |   https://github.com/PatrickTUM/UnCRtainTS  |
 
+```shell
+cd weights
+# Download the model for ensemble learning and move here
+```
 
 ## Running
 
