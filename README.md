@@ -1,4 +1,4 @@
-# A Web Application for Multimodal Cloud Removal via Ensemble Learning
+# Multimodal Cloud Removal via Ensemble Learning
 
 > This is my **Undergraduate Graduation Project**. The following is an incomplete document for reference only.
 
@@ -8,11 +8,6 @@
   <img src="https://github.com/Elm-Forest/CR_system/raw/refs/heads/master/.github/imgs/predict2.png?raw=true" width="20%" alt="" style="display: inline-block">
 </div>
 Left to right: Cloud-covered Optical Image, SAR Image, Cloud-removed Optical Image.
-
-## Model Structure
-
-**Stacking Ensemble Learning Framework**<br>
-<img src="https://github.com/Elm-Forest/CR_system/raw/refs/heads/master/.github/imgs/stacking.png?raw=true" width="60%" alt="" style="display: inline-block">
 
 ## Installation
 
